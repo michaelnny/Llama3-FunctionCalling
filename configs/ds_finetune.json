@@ -1,0 +1,109 @@
+{
+    "name": "llama3_function_calling",
+    "tokenizer_file": "/home/michael/models/Llama3/Llama-3-8B-Instruct/tokenizer.model",
+    "model_ckpt_file": "/home/michael/models/Llama3/Llama-3-8B-Instruct/consolidated.pth",
+    "seed": 3,
+    "model_config": {
+        "dim": 4096,
+        "n_layers": 32,
+        "n_heads": 32,
+        "n_kv_heads": 8,
+        "vocab_size": 128256,
+        "multiple_of": 1024,
+        "ffn_dim_multiplier": 1.3,
+        "norm_eps": 1e-05,
+        "rope_theta": 500000.0,
+        "max_batch_size": 32,
+        "max_seq_len": 1024,
+        "use_cache": false,
+        "embed_dropout": 0.1,
+        "attention_dropout": 0.1,
+        "hidden_dropout": 0.1
+    },
+    "lora_config": {
+        "lora_rank": 32,
+        "lora_scaling": 1.0,
+        "lora_dropout": 0.0,
+        "train_bias": "none",
+        "train_embedding": false,
+        "train_qv_only": true
+    },
+    "deepspeed_config": {
+        "train_micro_batch_size_per_gpu": 2,
+        "gradient_accumulation_steps": 16,
+        "steps_per_print": 10,
+        "gradient_clipping": 1.0,
+        "bf16": {
+            "enabled": true
+        },
+        "optimizer": {
+            "type": "Adam",
+            "params": {
+                "lr": 1e-5,
+                "betas": [
+                    0.9,
+                    0.999
+                ],
+                "eps": 1e-8,
+                "weight_decay": 0.0
+            }
+        },
+        "scheduler": {
+            "type": "WarmupDecayLR",
+            "params": {
+                "warmup_min_lr": 1e-5,
+                "warmup_max_lr": 2e-4,
+                "warmup_num_steps": 200,
+                "total_num_steps": 5000
+            }
+        },
+        "zero_optimization": {
+            "stage": 2,
+            "contiguous_gradients": true,
+            "overlap_comm": true,
+            "allgather_partitions": true,
+            "allgather_bucket_size": 1e6,
+            "reduce_scatter": true,
+            "reduce_bucket_size": 1e6,
+            "offload_optimizer": {
+                "device": "cpu",
+                "pin_memory": false
+            }
+        },
+        "activation_checkpointing": {
+            "partition_activations": false,
+            "cpu_checkpointing": true,
+            "contiguous_memory_optimization": true,
+            "number_checkpoints": null,
+            "synchronize_checkpoint_boundary": false,
+            "profile": false
+        },
+        "checkpoint": {
+            "save": true,
+            "save_interval": 200,
+            "output_path": "./checkpoints/",
+            "job_name": "ds_llama3_fc"
+        },
+        "tensorboard": {
+            "enabled": true,
+            "output_path": "./logs/",
+            "job_name": "ds_llama3_fc"
+        },
+        "wall_clock_breakdown": false
+    },
+    "train": {
+        "num_epochs": 2,
+        "dataset_sources": [
+            "./datasets/glaive-function-calling-v2/train.pk"
+        ]
+    },
+    "validation": {
+        "enabled": true,
+        "interval": 200,
+        "steps": 50,
+        "batch_size": 4,
+        "dataset_sources": [
+            "./datasets/glaive-function-calling-v2/validation.pk"
+        ]
+    }
+}

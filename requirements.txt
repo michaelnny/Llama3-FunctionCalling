@@ -1,0 +1,10 @@
+torch>=2.2.0
+tiktoken # tokenizer
+blobfile
+deepspeed
+tqdm
+numpy
+scikit_learn # compute evaluation metrics
+psutil # system metrics
+tensorboard
+fire

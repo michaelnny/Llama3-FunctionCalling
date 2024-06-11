@@ -1,0 +1,25 @@
+# Files too big
+*.tar
+*.zst
+datasets/*
+
+
+# Checkpoints
+checkpoints/ds_llama3_fc/*
+checkpoints/finetuned_merged/*
+
+# logs
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+.vscode

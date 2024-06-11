@@ -1,0 +1,8 @@
+{
+  "lora_rank": 32,
+  "lora_scaling": 1.0,
+  "lora_dropout": 0.0,
+  "train_bias": "none",
+  "train_embedding": false,
+  "train_qv_only": true
+}
